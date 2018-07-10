@@ -99,12 +99,15 @@ void loop() {
       Wire.endTransmission();    // stop transmitting
       
     }  
-    else if (mySt.substring(0,8) == "vs_speed"){
-      Serial.print(" vs_speed ");
+    else if (mySt.substring(0,7) == "vs_data"){
+      Serial.print(" vs_data ");
+      int data = mySt.substring(7,mySt.length()).toInt();
+      Serial.print(data);
   
-      //Wire.beginTransmission(adress); // transmit to device #adress
-      //Wire.write("vs_speed"); 
-      //Wire.endTransmission();    // stop transmitting
+      Wire.beginTransmission(adress); // transmit to device #adress
+      Wire.write("vs_data");
+      Wire.print(data); 
+      Wire.endTransmission();    // stop transmitting
   
       Wire.requestFrom(adress, 4);    // request 4 bytes from slave device #adress
       String temp = "";
@@ -112,9 +115,10 @@ void loop() {
         char inChar = Wire.read(); // receive a byte as character
         temp += inChar;
       }
-      double speedrpm = temp.toFloat();
-      Serial.print("recived ");         // print the character
-      Serial.print(speedrpm);
+      Serial.print(temp);
+      double datarec = temp.toFloat();
+      Serial.print(", recived ");         // print the character
+      Serial.print(datarec);
     }
     else Serial.print(" invalid command");
     Serial.println();

@@ -40,8 +40,12 @@ int timer1_counter; //for timer
 int i=0;
 bool forward = true;
 
+int request = 0;
+
 
 void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  
   pinMode(pin_a,INPUT_PULLUP);
   pinMode(pin_b,INPUT_PULLUP);
   pinMode(pin_fwd,OUTPUT);
@@ -50,9 +54,9 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(pin_a), detect_a, RISING);
 
   //start i2c 
-  Wire.begin(1);                // join i2c bus with address #adress
+  Wire.begin(adress);                // join i2c bus with address #adress
   Wire.onReceive(receiveEvent); // register event
-  Wire.onRequest(requestEvent); // register event
+  //Wire.onRequest(requestEvent); // register event
 
   //Serial.begin(9600);
   
@@ -103,7 +107,18 @@ void loop() {
     }
     if (mySt.substring(0,5) == "vs_kd"){
       kd = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kd
-    }  
+    }
+    if (mySt.substring(0,7) == "vs_data"){
+      request = mySt.substring(7,mySt.length()).toInt();
+      
+      if(request == 0) Wire.print(pv_speed);
+      if(request == 1) Wire.print(e_speed);
+      if(request == 2) Wire.print(pwm_pulse);
+      if(request == 3) Wire.print(set_speed);
+      if(request == 4) Wire.print(kp);
+      if(request == 5) Wire.print(ki);
+      if(request == 6) Wire.print(kd);
+    }   
     // clear the string when COM receiving is completed
     mySt = "";  //note: in code below, mySt will not become blank, mySt is blank until '\n' is received
     stringComplete = false;
@@ -149,7 +164,7 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
 
 // function that executes whenever data is received from master
 // this function is registered as an event, see setup()
-void receiveEvent() {
+void receiveEvent(int howLong) {
   while (Wire.available()) { // loop through all but the last
     char inChar = Wire.read(); // receive byte as a character
     mySt += inChar;         // print the character
@@ -158,6 +173,12 @@ void receiveEvent() {
 }
 
 void requestEvent() {
-  Wire.print(pv_speed);
+//  if(request == 0) Wire.print(pv_speed);
+//  if(request == 1) Wire.print(e_speed);
+//  if(request == 2) Wire.print(pwm_pulse);
+//  if(request == 3) Wire.print(set_speed);
+//  if(request == 4) Wire.print(kp);
+//  if(request == 5) Wire.print(ki);
+//  if(request == 6) Wire.print(kd);
 }
 
