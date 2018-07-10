@@ -23,7 +23,7 @@ void setup() {
   pinMode(pwm, OUTPUT);
   pinMode(dir, OUTPUT);
 
-  analogWrite(pwm, 20);                     //Make sure the motor in reset mode.
+  analogWrite(pwm, 50);                     //Make sure the motor in reset mode.
   digitalWrite(dir, HIGH);
 }
 
