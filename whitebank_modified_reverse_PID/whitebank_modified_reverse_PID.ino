@@ -1,5 +1,3 @@
-#include <Wire.h>
-
 /*
   Motor - PID speed control
   (1) Receive command from Visual Studio (via COM4): set_speed, kP, kI, kD
@@ -11,9 +9,6 @@
 
  http://engineer2you.blogspot.com
  */
-
-#define adress 1
- 
 String mySt = "";
 char myChar;
 boolean stringComplete = false;  // whether the string is complete
@@ -48,14 +43,8 @@ void setup() {
   pinMode(pin_bwd,OUTPUT);
   pinMode(pin_pwm,OUTPUT);
   attachInterrupt(digitalPinToInterrupt(pin_a), detect_a, RISING);
-
-  //start i2c 
-  Wire.begin(1);                // join i2c bus with address #adress
-  Wire.onReceive(receiveEvent); // register event
-  Wire.onRequest(requestEvent); // register event
-
-  //Serial.begin(9600);
-  
+  // start serial port at 9600 bps:
+  Serial.begin(9600);
   //--------------------------timer setup
   noInterrupts();           // disable all interrupts
   TCCR1A = 0;
@@ -69,6 +58,9 @@ void setup() {
   interrupts();             // enable all interrupts
   //--------------------------timer setup
   
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
 
   analogWrite(pin_pwm,0);   //stop motor
   digitalWrite(pin_fwd,0);  //stop motor
@@ -76,39 +68,37 @@ void setup() {
 }
 
 void loop() {
-  if (stringComplete) {  //receive command from Visual Studio
-    if (mySt.substring(0,8) == "vs_start"){
-      digitalWrite(pin_fwd,1);      //run motor run forward
-      digitalWrite(pin_bwd,0);
-      forward = true;
-      motor_start = true;
-      //Serial.println("starting");
-    }
-    if (mySt.substring(0,7) == "vs_stop"){
-      digitalWrite(pin_fwd,0);
-      digitalWrite(pin_bwd,0);      //stop motor
-      set_speed = 0;
-      motor_start = false;
-    }
-    if (mySt.substring(0,12) == "vs_set_speed"){
-      set_speed = mySt.substring(12,mySt.length()).toFloat();  //get string after set_speed
-      //Serial.print("setting speed ");
-      //Serial.println(set_speed);
-    }
-    if (mySt.substring(0,5) == "vs_kp"){
-      kp = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kp
-    }
-    if (mySt.substring(0,5) == "vs_ki"){
-      ki = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_ki
-    }
-    if (mySt.substring(0,5) == "vs_kd"){
-      kd = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kd
-    }  
+  if (stringComplete) {
     // clear the string when COM receiving is completed
     mySt = "";  //note: in code below, mySt will not become blank, mySt is blank until '\n' is received
     stringComplete = false;
   }
 
+  //receive command from Visual Studio
+  if (mySt.substring(0,8) == "vs_start"){
+    digitalWrite(pin_fwd,1);      //run motor run forward
+    digitalWrite(pin_bwd,0);
+    forward = true;
+    motor_start = true;
+  }
+  if (mySt.substring(0,7) == "vs_stop"){
+    digitalWrite(pin_fwd,0);
+    digitalWrite(pin_bwd,0);      //stop motor
+    set_speed = 0;
+    motor_start = false;
+  }
+  if (mySt.substring(0,12) == "vs_set_speed"){
+    set_speed = mySt.substring(12,mySt.length()).toFloat();  //get string after set_speed
+  }
+  if (mySt.substring(0,5) == "vs_kp"){
+    kp = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kp
+  }
+  if (mySt.substring(0,5) == "vs_ki"){
+    ki = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_ki
+  }
+  if (mySt.substring(0,5) == "vs_kd"){
+    kd = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kd
+  }  
 }
 
 void detect_a() {
@@ -121,6 +111,16 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
   pv_speed = 60.0*(encoder/ticksPerRev)/0.1;  //calculate motor speed, unit is rpm
   if(!forward)pv_speed = pv_speed*-1;
   encoder=0;
+  //print out speed
+  if (Serial.available() <= 0) {
+    Serial.print("speed");
+    Serial.print(pv_speed);         //Print speed (rpm) value to Visual Studio
+    Serial.print(", setspeed");
+    Serial.print(set_speed);
+    Serial.print(", pwmspeed");
+    Serial.println(pwm_pulse);
+    }
+
 
   //PID program
   if (motor_start){    
@@ -145,19 +145,19 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
   analogWrite(pin_pwm,abs(pwm_pulse));  //set motor speed  
   
 }
-
-
-// function that executes whenever data is received from master
-// this function is registered as an event, see setup()
-void receiveEvent() {
-  while (Wire.available()) { // loop through all but the last
-    char inChar = Wire.read(); // receive byte as a character
-    mySt += inChar;         // print the character
+void serialEvent() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    if (inChar != '\n') {
+      mySt += inChar;
+    }
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
   }
-  stringComplete = true;
-}
-
-void requestEvent() {
-  Wire.print(pv_speed);
 }
 
