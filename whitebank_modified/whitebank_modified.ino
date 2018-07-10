@@ -123,22 +123,13 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
 
 
   //PID program
-  if (motor_start){
-    //constrain(set_speed,-255,255);
-    //set_speed+=255;
-    //pwm_pulse+=255;
-    //pv_speed+=255;
-    
+  if (motor_start){    
     e_speed = set_speed - pv_speed;
     pwm_pulse = e_speed*kp + e_speed_sum*ki + (e_speed - e_speed_pre)*kd;
     e_speed_pre = e_speed;  //save last (previous) error
     e_speed_sum += e_speed; //sum of error
     if (e_speed_sum >4000) e_speed_sum = 4000;
     if (e_speed_sum <-4000) e_speed_sum = -4000;
-
-    //set_speed-=255;
-    //pwm_pulse-=255;
-    //pv_speed-=255;
   }
   else{
     e_speed = 0;
@@ -146,10 +137,9 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
     e_speed_sum = 0;
     pwm_pulse = set_speed;
   }
-  
 
   //update new speed
-  constrain(pwm_pulse,0,255);
+  constrain(pwm_pulse,-255,255);
   if(pwm_pulse < 0) {digitalWrite(pin_fwd, LOW); digitalWrite(pin_bwd, HIGH); forward = false;}
   else {digitalWrite(pin_fwd, HIGH); digitalWrite(pin_bwd, LOW); forward = true;}
   analogWrite(pin_pwm,abs(pwm_pulse));  //set motor speed  
