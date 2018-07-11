@@ -145,6 +145,7 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
     e_speed_sum += e_speed; //sum of error
     if (e_speed_sum >4000) e_speed_sum = 4000;
     if (e_speed_sum <-4000) e_speed_sum = -4000;
+    if(set_speed == 0 && pv_speed == 0) pwm_pulse = 0;
   }
   else{
     e_speed = 0;
