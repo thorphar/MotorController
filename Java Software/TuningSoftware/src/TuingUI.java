@@ -8,6 +8,7 @@ import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
+import java.util.*;
 
 /**
  *
@@ -15,8 +16,9 @@ import org.knowm.xchart.XYChart;
  */
 public class TuingUI extends javax.swing.JFrame {
 
+    static ArrayList<String> CommandHistoryList = new ArrayList<String>();
+    static int listcount = 0;
     static String CommandHistory = "";
-    static int logcount = 0;                
     
     static double[] xData = new double[] { 0.0, 1.0, 2.0 };
     static double[] yData = new double[] { 2.0, 1.0, 0.0 };
@@ -34,10 +36,12 @@ public class TuingUI extends javax.swing.JFrame {
     }
     
     public void submit(){
-        CommandHistory += "["+ logcount + "]" + tx_command.getText()+"\n";
-        logcount += 1;
+        CommandHistory += "["+ CommandHistoryList.size() + "]" + tx_command.getText() +"\n";
+        CommandHistoryList.add(tx_command.getText());
+        listcount = CommandHistoryList.size();
         ta_history.setText(CommandHistory);
         lb_console.setText(tx_command.getText());
+        tx_command.setText("");
     }
 
     /**
@@ -302,8 +306,23 @@ public class TuingUI extends javax.swing.JFrame {
 
     private void tx_commandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tx_commandKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyCode() == 10){
-            submit();
+        //System.out.print(evt.getKeyCode());
+        switch (evt.getKeyCode()){
+            case 10://enter
+                submit();
+                break;
+            case 38://up
+                if(listcount > 0){
+                    listcount--;
+                    tx_command.setText(CommandHistoryList.get(listcount));
+                }
+                break;
+            case 40://down
+                if(listcount < CommandHistoryList.size()-1){
+                    listcount++;
+                    tx_command.setText(CommandHistoryList.get(listcount));
+                }
+                break;
         }
     }//GEN-LAST:event_tx_commandKeyPressed
 
