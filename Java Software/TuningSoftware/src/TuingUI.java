@@ -32,6 +32,13 @@ public class TuingUI extends javax.swing.JFrame {
     public TuingUI() {
         initComponents();
     }
+    
+    public void submit(){
+        CommandHistory += "["+ logcount + "]" + tx_command.getText()+"\n";
+        logcount += 1;
+        ta_history.setText(CommandHistory);
+        lb_console.setText(tx_command.getText());
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,6 +81,11 @@ public class TuingUI extends javax.swing.JFrame {
         });
 
         tx_command.setToolTipText("Enter Command");
+        tx_command.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tx_commandKeyPressed(evt);
+            }
+        });
 
         ta_history.setEditable(false);
         ta_history.setColumns(20);
@@ -253,10 +265,7 @@ public class TuingUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //Serial send command 
-        CommandHistory += "["+ logcount + "]" + tx_command.getText()+"\n";
-        logcount += 1;
-        ta_history.setText(CommandHistory);
-        lb_console.setText(tx_command.getText());
+        submit();
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -290,6 +299,13 @@ public class TuingUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Send step Inpulse
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void tx_commandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tx_commandKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == 10){
+            submit();
+        }
+    }//GEN-LAST:event_tx_commandKeyPressed
 
     /**
      * @param args the command line arguments
