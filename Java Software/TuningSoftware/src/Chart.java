@@ -1,23 +1,35 @@
+import javax.swing.JPanel;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
+
 
 /**
  * Creates a simple real-time chart
  */
 public class Chart {
+    
+    static XYChart graph;
+    static double phase = 0;
+    static double[][] initdata = getSineData(phase);
+    
+    JPanel chartPnlArea;
+    
+    public Chart(JPanel chartPnlArea){
+        this.chartPnlArea = chartPnlArea;
+        graph = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
+        
+        JPanel pnlChart = new XChartPanel(graph); 
+        
+        this.chartPnlArea.add(pnlChart);
+        this.chartPnlArea.validate();
+    }
 
   public static void main(String[] args) throws Exception {
 
-    double phase = 0;
-    double[][] initdata = getSineData(phase);
-
     // Create Chart
-    final XYChart chart = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
-
-    // Show it
-    final SwingWrapper<XYChart> sw = new SwingWrapper<XYChart>(chart);
-    sw.displayChart();
+    graph = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
 
     while (true) {
 
@@ -27,8 +39,8 @@ public class Chart {
 
       final double[][] data = getSineData(phase);
 
-      chart.updateXYSeries("sine", data[0], data[1], null);
-      sw.repaintChart();
+      graph.updateXYSeries("sine", data[0], data[1], null);
+      //chartPnlArea.validate();
     }
 
   }
