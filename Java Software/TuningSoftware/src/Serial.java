@@ -58,13 +58,35 @@ public class Serial{
                           readData += doc2;
                           dataIn.add(readData);
                           ta_console.setText(ta_console.getText()+readData);
+                          double speed = 0.0;
+                          if(readData.contains("pvspeed")){
+                              //speed = 
+                              int start = readData.lastIndexOf("pvspeed")+"pvspeed".length();
+                              int end = readData.indexOf(",");
+                              if(start >= readData.length() || end >= readData.length()){
+                                  
+                              }
+                              else{
+                                try{
+                                    speed = Double.parseDouble(readData.substring(start, end));
+                                    chart.addDataPoint(speed);
+                                    //System.out.println(speed);
+                                    
+                                }
+                                catch(StringIndexOutOfBoundsException ex){
+                                    
+                                }
+                              }
+                              
+                              //pvspeed0.00,
+                          }
                           //chart.addDataPoint(new Random().nextInt(50));
                           readData = "";
                   }
                   else {
                           readData += doc2;
                   }
-                System.out.println(doc2);
+                //System.out.println(doc2);
             }
         });
         
