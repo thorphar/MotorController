@@ -10,19 +10,28 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextArea;
 /**
  *
  * @author vincent strong
  */
-public class Serial {
+public class Serial{
     private static SerialPort comPort;
     private static String readData = "";
     private static ArrayList<String> dataIn = new ArrayList<String>();
     
-    public Serial(){
-                
+    private ChartObject chart;
+    private JTextArea ta_console;
+    
+    public Serial(JTextArea ta_console, ChartObject chart){
+        
+        this.chart = chart;
+        this.ta_console = ta_console;
+        
         for(int i = 0; i<SerialPort.getCommPorts().length;i++)
             System.out.println(SerialPort.getCommPorts()[i].toString());
         
@@ -48,6 +57,8 @@ public class Serial {
                   if(doc2.contains("\n")) {
                           readData += doc2;
                           dataIn.add(readData);
+                          ta_console.setText(ta_console.getText()+readData);
+                          //chart.addDataPoint(new Random().nextInt(50));
                           readData = "";
                   }
                   else {
@@ -79,15 +90,23 @@ public class Serial {
         try {	
             out.write(data.getBytes());
         } catch (IOException ex) {
-            Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Unable to send data");
+        } catch (NullPointerException ex) {
+            //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Not connected yet");
+            return;
         }
         
         try {
             out.close();
         } catch (IOException ex) {
-            Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Unable to close serial stream");
+        } catch (NullPointerException ex) {
+            //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Not connected yet");
+            return;
         }
     }
 }

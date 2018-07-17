@@ -16,7 +16,7 @@ import org.knowm.xchart.XYChart;
  *
  * @author vincent strong
  */
-public class ChartThread extends Thread {
+public class ChartObject {
     
     private XYChart graph;
     private JPanel pnlChart;
@@ -28,16 +28,12 @@ public class ChartThread extends Thread {
     private ArrayList<Double> dataX = new ArrayList<Double>();
     private ArrayList<Double> dataY = new ArrayList<Double>();
     
-    public ChartThread(JPanel chartPnlArea){
+    public ChartObject(JPanel chartPnlArea){
         this.chartPnlArea = chartPnlArea;
         dataX.add(0.0);
         dataY.add(0.0);
-    }
-    
-    public void run(){
         
         startTime = System.currentTimeMillis();
-        double phase = 0;
         double[][] initdata = dataListToArray(dataX,dataY);
         
         graph = QuickChart.getChart("Data", "Time", "Speed", "series1", initdata[0], initdata[1]);
@@ -46,8 +42,8 @@ public class ChartThread extends Thread {
         
         this.chartPnlArea.add(pnlChart);
         this.chartPnlArea.validate();
-        
     }
+    
     
     private static double[][] dataListToArray(ArrayList<Double> dataX, ArrayList<Double> dataY){
         double[] targetX = new double[dataX.size()];
