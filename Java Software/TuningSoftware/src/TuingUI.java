@@ -21,69 +21,23 @@ public class TuingUI extends javax.swing.JFrame {
     static int listcount = 0;
     static String CommandHistory = "";
     
-    static double[] xData = new double[] { 0.0, 1.0, 2.0 };
-    static double[] yData = new double[] { 2.0, 1.0, 0.0 };
-    static XYChart chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)", xData, yData);
-
-    //JPanel chartPanel = new XChartPanel<XYChart>(chart);
-
-    // Create Chart
-
+    Serial serial;
+    
     /**
      * Creates new form TuingUI
      */
     public TuingUI() {
         initComponents();
-        createChart();
         
-    }
-    
-    
-    public void createChart(){
-        
+        //create chart
         ChartThread charter = new ChartThread(chartPnlArea);
         charter.start();
         
-        
-        //Chart chart = new Chart(chartPnlArea);
-                //System.out.print("make chart");
-                /*
-        double phase = 0;
-        double[][] initdata = getSineData(phase);
-        chart = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
-        JPanel pnlChart = new XChartPanel(chart); 
-        
-        chartPnlArea.add(pnlChart);
-        chartPnlArea.validate();
-        
-        while (true) {
-        System.out.print("update chart");
-        phase += 2 * Math.PI * 2 / 20.0;
- 
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TuingUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
- 
-        final double[][] data = getSineData(phase);
- 
-        chart.updateXYSeries("sine", data[0], data[1], null);
-        }
-            */
+        //create serial connection
+        serial = new Serial();
+        Comms_Label.setText(Comms_Label.getText()+serial.getCommsPort());
     }
     
-    private static double[][] getSineData(double phase) {
-
-    double[] xData = new double[100];
-    double[] yData = new double[100];
-    for (int i = 0; i < xData.length; i++) {
-      double radians = phase + (2 * Math.PI / xData.length * i);
-      xData[i] = radians;
-      yData[i] = Math.sin(radians);
-    }
-    return new double[][] { xData, yData };
-  }
           
     public void submit(){
         CommandHistory += "["+ CommandHistoryList.size() + "]" + tx_command.getText() +"\n";
@@ -91,6 +45,9 @@ public class TuingUI extends javax.swing.JFrame {
         listcount = CommandHistoryList.size();
         ta_history.setText(CommandHistory);
         lb_console.setText(tx_command.getText());
+        
+        serial.sendData(tx_command.getText());
+        
         tx_command.setText("");
     }
 
@@ -104,13 +61,13 @@ public class TuingUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu3 = new javax.swing.JMenu();
-        jButton1 = new javax.swing.JButton();
+        Connect_Button = new javax.swing.JButton();
         tx_command = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         ta_history = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        Send_Button = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        Disconnect_Button = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         kpSlider = new javax.swing.JSlider();
         kdSlider = new javax.swing.JSlider();
@@ -123,15 +80,16 @@ public class TuingUI extends javax.swing.JFrame {
         currentD = new javax.swing.JLabel();
         lb_console = new javax.swing.JLabel();
         chartPnlArea = new javax.swing.JPanel();
+        Comms_Label = new javax.swing.JLabel();
 
         jMenu3.setText("jMenu3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Connect");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Connect_Button.setText("Connect");
+        Connect_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                Connect_ButtonActionPerformed(evt);
             }
         });
 
@@ -149,15 +107,10 @@ public class TuingUI extends javax.swing.JFrame {
         ta_history.setFocusable(false);
         jScrollPane1.setViewportView(ta_history);
 
-        jButton2.setText("Send !");
-        jButton2.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jButton2StateChanged(evt);
-            }
-        });
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        Send_Button.setText("Send !");
+        Send_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                Send_ButtonActionPerformed(evt);
             }
         });
 
@@ -168,10 +121,10 @@ public class TuingUI extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Disconnect");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        Disconnect_Button.setText("Disconnect");
+        Disconnect_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                Disconnect_ButtonActionPerformed(evt);
             }
         });
 
@@ -221,52 +174,57 @@ public class TuingUI extends javax.swing.JFrame {
 
         chartPnlArea.setLayout(new javax.swing.BoxLayout(chartPnlArea, javax.swing.BoxLayout.LINE_AXIS));
 
+        Comms_Label.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        Comms_Label.setText("Comms Port:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(Send_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(19, 19, 19)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(48, 48, 48)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(lb_console, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(1, 1, 1)
+                                    .addComponent(jLabel1))
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel3))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(kiSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                                .addComponent(kpSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(kdSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(currentP)
+                                .addComponent(currentI, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(currentD))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(48, 48, 48)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(kdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(currentD))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(kiSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(currentI))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(kpSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
-                                .addComponent(currentP))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lb_console, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(Comms_Label)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 640, Short.MAX_VALUE)
                 .addComponent(chartPnlArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -278,35 +236,39 @@ public class TuingUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(kpSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(currentP))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(kiSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(currentI))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(kdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(currentD)))
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addComponent(Comms_Label)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(kiSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(currentI))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(kdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(currentD))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(Send_Button))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lb_console, javax.swing.GroupLayout.DEFAULT_SIZE, 14, Short.MAX_VALUE))
+                        .addComponent(lb_console, javax.swing.GroupLayout.DEFAULT_SIZE, 13, Short.MAX_VALUE))
                     .addComponent(chartPnlArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -314,30 +276,26 @@ public class TuingUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void Disconnect_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Disconnect_ButtonActionPerformed
         // TODO add your handling code here:
-        
         //Disconnect Serial
-    }//GEN-LAST:event_jButton4ActionPerformed
+        serial.closeConnection();
+    }//GEN-LAST:event_Disconnect_ButtonActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         //Send Tuning values
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void Send_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Send_ButtonActionPerformed
         //Serial send command 
         submit();
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_Send_ButtonActionPerformed
 
     private void kpSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_kpSliderStateChanged
         currentP.setText(Double.toString((double)kpSlider.getValue()/100));
     }//GEN-LAST:event_kpSliderStateChanged
-
-    private void jButton2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jButton2StateChanged
-        
-    }//GEN-LAST:event_jButton2StateChanged
 
     private void kiSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_kiSliderStateChanged
         // TODO add your handling code here:
@@ -351,11 +309,12 @@ public class TuingUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_kdSliderStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void Connect_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Connect_ButtonActionPerformed
         // TODO add your handling code here:
         //Connect serial
+        serial.openConnection();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_Connect_ButtonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
@@ -424,14 +383,15 @@ public class TuingUI extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Comms_Label;
+    private javax.swing.JButton Connect_Button;
+    private javax.swing.JButton Disconnect_Button;
+    private javax.swing.JButton Send_Button;
     private static javax.swing.JPanel chartPnlArea;
     private javax.swing.JLabel currentD;
     private javax.swing.JLabel currentI;
     private javax.swing.JLabel currentP;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

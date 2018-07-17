@@ -21,8 +21,8 @@ public class Serial {
     private static String readData = "";
     private static ArrayList<String> dataIn = new ArrayList<String>();
     
-    public static void main(String[] args) {
-        
+    public Serial(){
+                
         for(int i = 0; i<SerialPort.getCommPorts().length;i++)
             System.out.println(SerialPort.getCommPorts()[i].toString());
         
@@ -56,6 +56,11 @@ public class Serial {
                 System.out.println(doc2);
             }
         });
+        
+    }
+    
+    public String getCommsPort(){
+        return comPort.toString();
     }
     
     public void openConnection(){
