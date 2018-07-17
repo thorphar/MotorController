@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -17,60 +18,65 @@ import org.knowm.xchart.XYChart;
  */
 public class ChartThread extends Thread {
     
-   
+    private XYChart graph;
+    private JPanel pnlChart;
     
-    JPanel chartPnlArea;
+    private JPanel chartPnlArea;
+    
+    private long startTime;
+    
+    private ArrayList<Double> dataX = new ArrayList<Double>();
+    private ArrayList<Double> dataY = new ArrayList<Double>();
     
     public ChartThread(JPanel chartPnlArea){
         this.chartPnlArea = chartPnlArea;
+        dataX.add(0.0);
+        dataY.add(0.0);
     }
     
     public void run(){
         
-        final XYChart graph;
+        startTime = System.currentTimeMillis();
         double phase = 0;
-        double[][] initdata = getSineData(phase);
+        double[][] initdata = dataListToArray(dataX,dataY);
         
-        graph = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
+        graph = QuickChart.getChart("Data", "Time", "Speed", "series1", initdata[0], initdata[1]);
         
-        JPanel pnlChart = new XChartPanel(graph); 
+        pnlChart = new XChartPanel(graph); 
         
         this.chartPnlArea.add(pnlChart);
         this.chartPnlArea.validate();
         
-        
-        //graph = QuickChart.getChart("Simple XChart Real-time Demo", "Radians", "Sine", "sine", initdata[0], initdata[1]);
-
-        while (true) {
-            
-            //System.out.println("update");
-            
-            phase += 2 * Math.PI * 2 / 20.0;
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ChartThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            final double[][] data = getSineData(phase);
-
-            graph.updateXYSeries("sine", data[0], data[1], null);
-            pnlChart.updateUI();
-            chartPnlArea.validate();
-        }
     }
     
-    private static double[][] getSineData(double phase) {
-
-        double[] xData = new double[100];
-        double[] yData = new double[100];
-        for (int i = 0; i < xData.length; i++) {
-            double radians = phase + (2 * Math.PI / xData.length * i);
-            xData[i] = radians;
-            yData[i] = Math.sin(radians);
+    private static double[][] dataListToArray(ArrayList<Double> dataX, ArrayList<Double> dataY){
+        double[] targetX = new double[dataX.size()];
+        for (int i = 0; i < targetX.length; i++) {
+            //targetX[i] = dataX.get(i).doubleValue();  // java 1.4 style
+            // or:
+            targetX[i] = dataX.get(i);                // java 1.5+ style (outboxing)
         }
-        return new double[][] { xData, yData };
+        
+        double[] targetY = new double[dataY.size()];
+        for (int i = 0; i < targetY.length; i++) {
+            //targetY[i] = dataY.get(i).doubleValue();  // java 1.4 style
+            // or:
+            targetY[i] = dataY.get(i);                // java 1.5+ style (outboxing)
+        }
+        
+        double[][] target = {targetX, targetY};
+        return target;
+    }
+    
+    
+    public void addDataPoint(double y){
+        dataY.add(y);
+        dataX.add((double)((System.currentTimeMillis() - startTime) / 1000));
+        
+        final double[][] data = dataListToArray(dataX,dataY);
+                
+        graph.updateXYSeries("series1",data[0], data[1], null);
+        pnlChart.updateUI();
     }
     
 }
