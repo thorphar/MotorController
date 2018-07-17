@@ -20,17 +20,24 @@ import javax.swing.JTextArea;
  * @author vincent strong
  */
 public class Serial{
-    private static SerialPort comPort;
+    private static SerialPort comPort = null;
     private static String readData = "";
     private static ArrayList<String> dataIn = new ArrayList<String>();
     
     private ChartObject chart;
     private JTextArea ta_console;
     
+    private double setSpeed = 0;
+    
     public Serial(JTextArea ta_console, ChartObject chart){
         
         this.chart = chart;
         this.ta_console = ta_console;
+        
+        if(SerialPort.getCommPorts().length <= 0 ){
+            System.out.println("no device connected, connect one then restart the programe");
+            return;
+        }
         
         for(int i = 0; i<SerialPort.getCommPorts().length;i++)
             System.out.println(SerialPort.getCommPorts()[i].toString());
@@ -69,7 +76,7 @@ public class Serial{
                               else{
                                 try{
                                     speed = Double.parseDouble(readData.substring(start, end));
-                                    chart.addDataPoint(speed);
+                                    chart.addDataPoint(speed,setSpeed);
                                     //System.out.println(speed);
                                     
                                 }
@@ -93,7 +100,8 @@ public class Serial{
     }
     
     public String getCommsPort(){
-        return comPort.toString();
+        if(comPort == null)return "No device";
+        else return comPort.toString();
     }
     
     public void openConnection(){
@@ -102,6 +110,10 @@ public class Serial{
     
     public void closeConnection(){
         comPort.closePort();
+    }
+    
+    public void setSpeed(double setSpeed){
+        this.setSpeed = setSpeed;
     }
     
     public void sendData(String data){

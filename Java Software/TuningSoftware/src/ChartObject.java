@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -28,15 +29,24 @@ public class ChartObject {
     private ArrayList<Double> dataX = new ArrayList<Double>();
     private ArrayList<Double> dataY = new ArrayList<Double>();
     
+    private ArrayList<Double> speed = new ArrayList<Double>();
+    
     public ChartObject(JPanel chartPnlArea){
         this.chartPnlArea = chartPnlArea;
         dataX.add(0.0);
         dataY.add(0.0);
+        speed.add(0.0);
         
         startTime = System.currentTimeMillis();
         double[][] initdata = dataListToArray(dataX,dataY);
         
-        graph = QuickChart.getChart("Data", "Time", "Speed", "series1", initdata[0], initdata[1]);
+        graph = QuickChart.getChart("Data", "Time (seconds)", "Speed (RPM)", "series1", initdata[0], initdata[1]);
+        graph.addSeries("series2", initdata[1]);
+        graph.getStyler().setMarkerSize(0);
+        
+        //for(int i = 0 ; i<graph.getStyler().getSeriesLines().length;i++)System.out.println(graph.getStyler().getSeriesLines()[i]);
+        //for(int i = 0 ; i<graph.getStyler().getSeriesMarkers().length;i++)System.out.println(graph.getStyler().getSeriesMarkers()[i]);
+        
         
         pnlChart = new XChartPanel(graph); 
         
@@ -64,15 +74,34 @@ public class ChartObject {
         return target;
     }
     
-    
-    public void addDataPoint(double y){
+    int scale = 50;
+    int position = 0;
+    public void addDataPoint(double y, double pvspeed){
         dataY.add(y);
+        speed.add(pvspeed);
         dataX.add((double)((System.currentTimeMillis() - startTime) / 1000));
         
-        final double[][] data = dataListToArray(dataX,dataY);
+        int length = dataY.size();
+        int start = length - scale;
+        if(start < 0 ) start = 0;
+        int end = length;
+        //if(end > length) end = length;
+        //System.out.println(scale+" "+length+" "+start+" "+end);
+        final double[][] dataArray = Arrays.copyOfRange(dataListToArray(dataX,dataY), 0, length);
+        final double[][] speedArray = Arrays.copyOfRange(dataListToArray(dataX,speed), 0, length);
                 
-        graph.updateXYSeries("series1",data[0], data[1], null);
+        graph.updateXYSeries("series1", dataArray[0], dataArray[1], null);
+        graph.updateXYSeries("series2", speedArray[0], speedArray[1], null);
         pnlChart.updateUI();
+        
+    }
+    
+    public void setScale(int scale){
+        this.scale = scale;
+    }
+    
+    public void setPosition(int position){
+        this.position = position;
     }
     
 }
