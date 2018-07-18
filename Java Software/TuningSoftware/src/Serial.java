@@ -14,6 +14,8 @@ import java.util.EventObject;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 /**
  *
@@ -26,8 +28,7 @@ public class Serial{
     
     private ChartObject chart;
     private JTextArea ta_console;
-    
-    private double setSpeed = 0;
+
     
     public Serial(JTextArea ta_console, ChartObject chart){
         
@@ -35,7 +36,10 @@ public class Serial{
         this.ta_console = ta_console;
         
         if(SerialPort.getCommPorts().length <= 0 ){
-            System.out.println("no device connected, connect one then restart the programe");
+            System.out.println("No device connected, connect one then restart the programe");
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "No device connected, connect one then restart the programe", "Error", JOptionPane.ERROR_MESSAGE);
+            
             return;
         }
         
@@ -43,7 +47,7 @@ public class Serial{
             System.out.println(SerialPort.getCommPorts()[i].toString());
         
         comPort = SerialPort.getCommPorts()[0];
-        comPort.setBaudRate(9600);
+        comPort.setBaudRate(19200);
         
         comPort.addDataListener(new SerialPortDataListener() {
             @Override
@@ -62,28 +66,28 @@ public class Serial{
                           e.printStackTrace();
                   }
                   if(doc2.contains("\n")) {
-                          readData += doc2;
-                          dataIn.add(readData);
-                          ta_console.setText(ta_console.getText()+readData);
-                          double speed = 0.0;
-                          if(readData.contains("pvspeed")){
-                              //speed = 
-                              int start = readData.lastIndexOf("pvspeed")+"pvspeed".length();
-                              int end = readData.indexOf(",");
-                              if(start >= readData.length() || end >= readData.length()){
+                            readData += doc2;
+                            dataIn.add(readData);
+                            ta_console.setText(ta_console.getText()+readData);
+                            double speed = 0.0;
+                            if(readData.contains("pvspeed")){
+                                //speed = 
+                                int start = readData.lastIndexOf("pvspeed")+"pvspeed".length();
+                                int end = readData.indexOf(",");
+                                if(start >= readData.length() || end >= readData.length()){
                                   
-                              }
-                              else{
+                            }
+                            else{
                                 try{
                                     speed = Double.parseDouble(readData.substring(start, end));
-                                    chart.addDataPoint(speed,setSpeed);
+                                    chart.setRecentY(speed);
                                     //System.out.println(speed);
                                     
                                 }
                                 catch(StringIndexOutOfBoundsException ex){
                                     
                                 }
-                              }
+                            }
                               
                               //pvspeed0.00,
                           }
@@ -106,14 +110,12 @@ public class Serial{
     
     public void openConnection(){
         comPort.openPort();
+        chart.setConnected(true);
     }
     
     public void closeConnection(){
         comPort.closePort();
-    }
-    
-    public void setSpeed(double setSpeed){
-        this.setSpeed = setSpeed;
+        chart.setConnected(false);
     }
     
     public void sendData(String data){
@@ -126,9 +128,13 @@ public class Serial{
         } catch (IOException ex) {
             //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Unable to send data");
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Unable to send data", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NullPointerException ex) {
             //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Not connected yet");
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Not connected yet", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -137,9 +143,13 @@ public class Serial{
         } catch (IOException ex) {
             //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Unable to close serial stream");
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Unable to close serial stream", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NullPointerException ex) {
             //Logger.getLogger(Serial.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Not connected yet");
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Not connected yet", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
     }

@@ -61,31 +61,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="kiSlider" pref="223" max="32767" attributes="0"/>
-                                  <Component id="kpSlider" max="32767" attributes="0"/>
-                                  <Component id="kdSlider" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="SpeedSlider" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="currentP" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="currentI" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="currentD" min="-2" max="-2" attributes="0"/>
-                                  <Component id="currentSpeed" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <Component id="Command_Titel_Label" min="-2" pref="141" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="Recived_Titel_Label" min="-2" pref="141" max="-2" attributes="0"/>
@@ -105,12 +80,37 @@
                               </Group>
                           </Group>
                           <Component id="lb_console" alignment="0" min="-2" pref="142" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="kiSlider" pref="223" max="32767" attributes="0"/>
+                                  <Component id="kpSlider" max="32767" attributes="0"/>
+                                  <Component id="kdSlider" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="SpeedSlider" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="currentP" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="currentSpeed" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="currentI" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="currentD" min="-2" pref="40" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jScrollBar1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="599" max="32767" attributes="0"/>
+              <EmptySpace pref="577" max="32767" attributes="0"/>
               <Component id="chartPnlArea" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -142,8 +142,8 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="SpeedSlider" min="-2" max="-2" attributes="0"/>
-                                          <Component id="currentSpeed" min="-2" max="-2" attributes="0"/>
+                                          <Component id="SpeedSlider" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="currentSpeed" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -153,19 +153,19 @@
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="kiSlider" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="currentI" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="currentI" alignment="0" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="currentD" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                                   <Component id="kdSlider" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="currentD" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
-                                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                                       <Component id="Comms_Titel_Label" min="-2" max="-2" attributes="0"/>
@@ -343,21 +343,6 @@
         <Property name="text" type="java.lang.String" value="kD"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="currentP">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="0.0"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="currentI">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="0.0"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="currentD">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="0.0"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="lb_console">
       <Properties>
         <Property name="text" type="java.lang.String" value="console"/>
@@ -462,11 +447,6 @@
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="SpeedSliderStateChanged"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="currentSpeed">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="0.0"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -474,6 +454,38 @@
         </Property>
         <Property name="text" type="java.lang.String" value="speed"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="currentSpeed">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0.0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="currentSpeedKeyTyped"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="currentP">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0.0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="currentPKeyTyped"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="currentI">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0.0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="currentIKeyTyped"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="currentD">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0.0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="currentDKeyTyped"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

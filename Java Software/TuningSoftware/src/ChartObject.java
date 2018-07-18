@@ -17,7 +17,7 @@ import org.knowm.xchart.XYChart;
  *
  * @author vincent strong
  */
-public class ChartObject {
+public class ChartObject extends Thread{
     
     private XYChart graph;
     private JPanel pnlChart;
@@ -30,6 +30,11 @@ public class ChartObject {
     private ArrayList<Double> dataY = new ArrayList<Double>();
     
     private ArrayList<Double> speed = new ArrayList<Double>();
+    
+    private double recentY = 0;
+    private double pvSpeed = 0;
+    
+    private boolean connected = false;
     
     public ChartObject(JPanel chartPnlArea){
         this.chartPnlArea = chartPnlArea;
@@ -55,6 +60,18 @@ public class ChartObject {
     }
     
     
+    public void run(){
+        while(true){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ChartObject.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(connected)this.addDataPoint(recentY, pvSpeed);
+        }
+    }
+    
+    
     private static double[][] dataListToArray(ArrayList<Double> dataX, ArrayList<Double> dataY){
         double[] targetX = new double[dataX.size()];
         for (int i = 0; i < targetX.length; i++) {
@@ -74,7 +91,7 @@ public class ChartObject {
         return target;
     }
     
-    int scale = 50;
+    int scale = 20;
     int position = 0;
     public void addDataPoint(double y, double pvspeed){
         dataY.add(y);
@@ -82,11 +99,7 @@ public class ChartObject {
         dataX.add((double)((System.currentTimeMillis() - startTime) / 1000));
         
         int length = dataY.size();
-        int start = length - scale;
-        if(start < 0 ) start = 0;
-        int end = length;
-        //if(end > length) end = length;
-        //System.out.println(scale+" "+length+" "+start+" "+end);
+
         final double[][] dataArray = Arrays.copyOfRange(dataListToArray(dataX,dataY), 0, length);
         final double[][] speedArray = Arrays.copyOfRange(dataListToArray(dataX,speed), 0, length);
                 
@@ -94,6 +107,8 @@ public class ChartObject {
         graph.updateXYSeries("series2", speedArray[0], speedArray[1], null);
         pnlChart.updateUI();
         
+        double max =  dataX.get(dataX.size()-1);
+        graph.getStyler().setXAxisMin( ((max-scale)<0) ? 0 : (max-scale) );
     }
     
     public void setScale(int scale){
@@ -102,6 +117,19 @@ public class ChartObject {
     
     public void setPosition(int position){
         this.position = position;
+        
+        //graph.getStyler().setXAxisMin((double)position);
+        //graph.getStyler().setXAxisMax((double)(position+scale));
+    }
+    
+    public void setPvSpeed(double pvSpeed){
+        this.pvSpeed = pvSpeed;
+    }
+    public void setRecentY(double recentY){
+        this.recentY = recentY;
+    }
+    public void setConnected(boolean connected){
+        this.connected = connected;
     }
     
 }

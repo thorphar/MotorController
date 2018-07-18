@@ -44,7 +44,7 @@ void setup() {
   pinMode(pin_pwm,OUTPUT);
   attachInterrupt(digitalPinToInterrupt(pin_a), detect_a, RISING);
   // start serial port at 9600 bps:
-  Serial.begin(9600);
+  Serial.begin(19200);
   //--------------------------timer setup
   noInterrupts();           // disable all interrupts
   TCCR1A = 0;
