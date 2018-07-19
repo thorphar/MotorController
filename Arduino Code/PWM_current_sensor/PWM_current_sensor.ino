@@ -6,7 +6,8 @@
 
 const int analogIn = A0;
 int mVperAmp = 185; // use 100 for 20A Module and 66 for 30A Module
-int RawValue= 0;
+
+int RawValue = 0;
 int ACSoffset = 2500; 
 double Voltage = 0;
 double Amps = 0;
@@ -23,8 +24,8 @@ void setup() {
   pinMode(pwm, OUTPUT);
   pinMode(dir, OUTPUT);
 
-  analogWrite(pwm, 50);                     //Make sure the motor in reset mode.
-  digitalWrite(dir, HIGH);
+  analogWrite(pwm, 100);                     //Make sure the motor in reset mode.
+  digitalWrite(dir, LOW);
 }
 
 void incPWM(){
@@ -36,8 +37,11 @@ void loop() {
   t.update();
   // put your main code here, to run repeatedly:
   RawValue = analogRead(analogIn);
+  //Serial.println(RawValue);
+  
   Voltage = (RawValue / 1024.0) * 5000; // Gets you mV
+  Serial.println(Voltage);
+  
   Amps = ((Voltage - ACSoffset) / mVperAmp);
-
-  Serial.println(Amps);
+  //Serial.println(Amps);
 }
