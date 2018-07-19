@@ -234,6 +234,11 @@ public class TuingUI extends javax.swing.JFrame {
                 Start_CheckBoxStateChanged(evt);
             }
         });
+        Start_CheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Start_CheckBoxActionPerformed(evt);
+            }
+        });
 
         SpeedSlider.setMajorTickSpacing(50);
         SpeedSlider.setMaximum(200);
@@ -547,8 +552,6 @@ public class TuingUI extends javax.swing.JFrame {
 
     private void Start_CheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_Start_CheckBoxStateChanged
         // TODO add your handling code here:
-        if(Start_CheckBox.isSelected())submit("vs_start");
-        else  submit("vs_stop");
     }//GEN-LAST:event_Start_CheckBoxStateChanged
 
     private void currentSpeedKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentSpeedKeyTyped
@@ -622,6 +625,12 @@ public class TuingUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_currentDKeyTyped
+
+    private void Start_CheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Start_CheckBoxActionPerformed
+        // TODO add your handling code here:
+        if(Start_CheckBox.isSelected())submit("vs_start");
+        else  submit("vs_stop");
+    }//GEN-LAST:event_Start_CheckBoxActionPerformed
 
     
     /**

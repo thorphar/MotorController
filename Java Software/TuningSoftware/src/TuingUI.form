@@ -428,6 +428,7 @@
       </Properties>
       <Events>
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="Start_CheckBoxStateChanged"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Start_CheckBoxActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JSlider" name="SpeedSlider">
