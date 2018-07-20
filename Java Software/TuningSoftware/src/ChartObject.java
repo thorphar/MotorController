@@ -45,8 +45,8 @@ public class ChartObject extends Thread{
         startTime = System.currentTimeMillis();
         double[][] initdata = dataListToArray(dataX,dataY);
         
-        graph = QuickChart.getChart("Data", "Time (seconds)", "Speed (RPM)", "series1", initdata[0], initdata[1]);
-        graph.addSeries("series2", initdata[1]);
+        graph = QuickChart.getChart("Data", "Time (seconds)", "Speed (RPM)", "PV Speed", initdata[0], initdata[1]);
+        graph.addSeries("Set Speed", initdata[1]);
         graph.getStyler().setMarkerSize(0);
         
         //for(int i = 0 ; i<graph.getStyler().getSeriesLines().length;i++)System.out.println(graph.getStyler().getSeriesLines()[i]);
@@ -103,8 +103,8 @@ public class ChartObject extends Thread{
         final double[][] dataArray = Arrays.copyOfRange(dataListToArray(dataX,dataY), 0, length);
         final double[][] speedArray = Arrays.copyOfRange(dataListToArray(dataX,speed), 0, length);
                 
-        graph.updateXYSeries("series1", dataArray[0], dataArray[1], null);
-        graph.updateXYSeries("series2", speedArray[0], speedArray[1], null);
+        graph.updateXYSeries("PV Speed", dataArray[0], dataArray[1], null);
+        graph.updateXYSeries("Set Speed", speedArray[0], speedArray[1], null);
         pnlChart.updateUI();
         
         double max =  dataX.get(dataX.size()-1);

@@ -39,7 +39,7 @@ public class Serial{
             System.out.println("No device connected, connect one then restart the programe");
             final JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, "No device connected, connect one then restart the programe", "Error", JOptionPane.ERROR_MESSAGE);
-            
+            System.exit(0);
             return;
         }
         
