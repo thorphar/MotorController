@@ -1,5 +1,5 @@
-#include <Event.h>
-#include <Timer.h>
+//#include <Event.h>
+//#include <Timer.h>
 
 #define pwm 5                      //Power of motor.
 #define dir 4 
@@ -13,7 +13,7 @@ double Voltage = 0;
 double Amps = 0;
 unsigned int swing = 0;
 
-Timer t;
+//Timer t;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,7 +24,7 @@ void setup() {
   pinMode(pwm, OUTPUT);
   pinMode(dir, OUTPUT);
 
-  analogWrite(pwm, 100);                     //Make sure the motor in reset mode.
+  analogWrite(pwm, 50);                     //Make sure the motor in reset mode.
   digitalWrite(dir, LOW);
 }
 
@@ -34,7 +34,7 @@ void incPWM(){
 }
 
 void loop() {
-  t.update();
+  //t.update();
   // put your main code here, to run repeatedly:
   RawValue = analogRead(analogIn);
   //Serial.println(RawValue);
