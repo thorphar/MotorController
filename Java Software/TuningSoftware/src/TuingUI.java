@@ -588,7 +588,7 @@ public class TuingUI extends javax.swing.JFrame {
     private void currentSpeedKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_currentSpeedKeyTyped
         int in = evt.getKeyChar();
         //System.out.println(in);
-        int[] checks = new int[] {8,37,39,46,48,49,50,51,52,53,54,55,56,57,127};
+        int[] checks = new int[] {8,37,39,45,46,48,49,50,51,52,53,54,55,56,57,127};
         if(!contains(checks, in)){
             evt.consume();
         }
