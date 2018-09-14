@@ -4,7 +4,8 @@
  */
 #include <Wire.h>
 
-#define adress 1      //adress of driver on I2C
+#define masterAdress 8 // adress of master on I2C 
+#define adress 9      //adress of driver on I2C
 
 #define  pin_a 2      //for encoder pulse A
 #define  pin_b 3      //for encoder pulse B
@@ -24,6 +25,7 @@
 String mySt = "";
 char myChar;
 boolean stringComplete = false;  // whether the string is complete
+
 boolean motor_start = false;
 const double ticksPerRev = 392;//encoder ticks per revolution; 14:1 gearing, 7 ticks per rotation, 4 percision 14*7*4=392
 int encoder = 0;
@@ -38,9 +40,12 @@ double pwm_pulse = 0;     //this value is 0~255
 double kp = 0;
 double ki = 0;
 double kd = 0;
+
 int timer1_counter; //for timer
 int i=0;
 bool forward = true;
+
+bool tuneMode = false; //if true then will send speed for tuning
 
 void setup() {
   // put your setup code here, to run once:
@@ -83,13 +88,26 @@ void setup() {
 //detect recived command
 void loop() {
   // put your main code here, to run repeatedly:
-
+  //if tunign enabled send speed
+  if(tuneMode){
+    Wire.beginTransmission(masterAdress);
+    Wire.write("Data:pvspeed");
+    Wire.print(pv_speed);
+    Wire.write(",");
+    Wire.endTransmission();
+  }
   //check if encoder is attached
   if(!digitalRead(en_check)){// if not attached then stop
     Stop();
+    Wire.beginTransmission(masterAdress);
+    Wire.write("Error:EncoderDetach,");
+    Wire.endTransmission();
   }
   if(GetBoardTemp()>=tbCutoff){
     Stop();
+    Wire.beginTransmission(masterAdress);
+    Wire.write("Error:BoardTemp,");
+    Wire.endTransmission();
   }
 
   if (stringComplete) {
@@ -114,7 +132,10 @@ void loop() {
     }
     if (mySt.substring(0,5) == "vs_kd"){
       kd = mySt.substring(5,mySt.length()).toFloat(); //get string after vs_kd
-    }  
+    }
+    if (mySt.substring(0,7) == "vs_tune"){
+      tuneMode = !tuneMode;
+    }
     
     // clear the string when COM receiving is completed
     mySt = "";  //note: in code below, mySt will not become blank, mySt is blank until '\n' is received
@@ -150,21 +171,7 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
   pv_speed = 60.0*(encoder/ticksPerRev)/0.1;  //calculate motor speed, unit is rpm
   if(!forward)pv_speed = pv_speed*-1;
   encoder=0;
-
-
-
-    //print out speed for testing
-  if (Serial.available() <= 0) {
-    Serial.print("pvspeed");
-    Serial.print(pv_speed);         //Print speed (rpm) value to Visual Studio
-    Serial.print(", setspeed");
-    Serial.print(set_speed);
-    Serial.print(", pwmspeed");
-    Serial.println(pwm_pulse);
-    }
-
-    
-
+  
   //PID program
   if (motor_start){    
     e_speed = set_speed - pv_speed;
@@ -231,21 +238,3 @@ void receiveEvent(int howLong) {
   // so the main loop can do something about it:
   stringComplete = true;
 }
-
-
-//when data is recived via serial connection
-//void serialEvent() {
-//  while (Serial.available()) {
-//    // get the new byte:
-//    char inChar = (char)Serial.read();
-//    // add it to the inputString:
-//    if (inChar != '\n') {
-//      mySt += inChar;
-//    }
-//    // if the incoming character is a newline, set a flag
-//    // so the main loop can do something about it:
-//    if (inChar == '\n') {
-//      stringComplete = true;
-//    }
-//  }
-//}

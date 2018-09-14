@@ -65,6 +65,18 @@ public class TuingUI extends javax.swing.JFrame {
 
     }
     
+    public String getAdress(){
+        try{
+                int adress = Integer.parseInt(tx_adress.getText());
+                return String. format("%02d", adress);
+            }
+            catch(NumberFormatException ex){
+                final JPanel panel = new JPanel();
+                JOptionPane.showMessageDialog(panel, "Adress is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        return "00";
+    }
+    
     
 
     /**
@@ -109,7 +121,12 @@ public class TuingUI extends javax.swing.JFrame {
         currentI = new javax.swing.JTextField();
         currentD = new javax.swing.JTextField();
         Recived_Titel_Label1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        saveData_Button = new javax.swing.JButton();
+        tx_adress = new javax.swing.JTextField();
+        Comms_Titel_Label1 = new javax.swing.JLabel();
+        cb_comm = new javax.swing.JComboBox<>();
+        Comms_Titel_Label2 = new javax.swing.JLabel();
+        tune_button = new javax.swing.JButton();
 
         jMenu3.setText("jMenu3");
 
@@ -318,10 +335,32 @@ public class TuingUI extends javax.swing.JFrame {
         Recived_Titel_Label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         Recived_Titel_Label1.setText("Last Command:");
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveData_Button.setText("Save Data");
+        saveData_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveData_ButtonActionPerformed(evt);
+            }
+        });
+
+        tx_adress.setText("9");
+        tx_adress.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tx_adressKeyTyped(evt);
+            }
+        });
+
+        Comms_Titel_Label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        Comms_Titel_Label1.setText("Adress");
+
+        cb_comm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serial", "I2C" }));
+
+        Comms_Titel_Label2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        Comms_Titel_Label2.setText("Communication");
+
+        tune_button.setText("Tune");
+        tune_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tune_buttonActionPerformed(evt);
             }
         });
 
@@ -332,64 +371,83 @@ public class TuingUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(19, 19, 19)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(38, 38, 38)
-                                    .addComponent(Start_CheckBox)))
-                            .addGap(48, 48, 48)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(Step_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(SetTunings_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(SetSpeed_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(Command_Titel_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(1, 1, 1)
-                                            .addComponent(jLabel1))
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(kiSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                                        .addComponent(kpSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(kdSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(SpeedSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(currentP, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(currentSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(currentI, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(currentD, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(Recived_Titel_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(Recived_Titel_Label1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lb_console, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(Comms_Label)
-                                        .addComponent(Comms_Titel_Label))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jButton1)
-                                        .addComponent(Send_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Command_Titel_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(1, 1, 1)
+                                                .addComponent(jLabel1))
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(kiSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                                            .addComponent(kpSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(kdSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(SpeedSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(currentP, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(currentSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(currentI, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(currentD, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(Recived_Titel_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(Recived_Titel_Label1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lb_console, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(Comms_Titel_Label))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Send_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tx_adress, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Comms_Titel_Label1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(Comms_Titel_Label2))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cb_comm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(21, 21, 21))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(Start_CheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(saveData_Button)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tune_button)
+                                .addGap(2, 2, 2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Step_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SetTunings_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SetSpeed_Button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Comms_Label)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 579, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 567, Short.MAX_VALUE)
                 .addComponent(chartPnlArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -404,17 +462,31 @@ public class TuingUI extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Step_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(SetSpeed_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(SetTunings_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Start_CheckBox))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(1, 1, 1)
+                                            .addComponent(Connect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(Disconnect_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(Comms_Titel_Label2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(cb_comm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(tx_adress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(Comms_Titel_Label1))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(Step_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(SetSpeed_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(SetTunings_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(saveData_Button)
+                                            .addComponent(Start_CheckBox)
+                                            .addComponent(tune_button))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -438,24 +510,19 @@ public class TuingUI extends javax.swing.JFrame {
                                                     .addComponent(currentD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(jLabel3)
                                                     .addComponent(kdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(4, 4, 4)
-                                                .addComponent(Comms_Titel_Label)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(Comms_Label))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jButton1)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(Send_Button))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(Command_Titel_Label))
+                                        .addGap(4, 4, 4)
+                                        .addComponent(Comms_Titel_Label))
                                     .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                                .addComponent(Comms_Label)
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Send_Button))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Command_Titel_Label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lb_console)
@@ -497,19 +564,19 @@ public class TuingUI extends javax.swing.JFrame {
                 return;
             }
         try{
-                double temp = Double.parseDouble(currentD.getText());
-            }
-            catch(NumberFormatException ex){
-                final JPanel panel = new JPanel();
-                JOptionPane.showMessageDialog(panel, "KD is not a number", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            double temp = Double.parseDouble(currentD.getText());
+        }
+        catch(NumberFormatException ex){
+            final JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "KD is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
-        submit("vs_kp"+currentP.getText());
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_kp"+currentP.getText());
         
-        submit("vs_ki"+currentI.getText());
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_ki"+currentI.getText());
         
-        submit("vs_kd"+currentD.getText());
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_kd"+currentD.getText());
         
     }//GEN-LAST:event_SetTunings_ButtonActionPerformed
 
@@ -546,13 +613,13 @@ public class TuingUI extends javax.swing.JFrame {
     private void Step_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Step_ButtonActionPerformed
         // TODO add your handling code here:
         // Send step Inpulse
-        submit("vs_stop");
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_stop");
         charter.setPvSpeed(0);
-        submit("vs_start");
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_start");
         Start_CheckBox.setSelected(true);
         try{
             charter.setPvSpeed(Double.parseDouble(currentSpeed.getText()));
-            submit("vs_set_speed"+currentSpeed.getText());
+            submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_set_speed"+currentSpeed.getText());
         }
         catch(NumberFormatException ex){
             final JPanel panel = new JPanel();
@@ -593,7 +660,7 @@ public class TuingUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             charter.setPvSpeed(Double.parseDouble(currentSpeed.getText()));
-            submit("vs_set_speed"+currentSpeed.getText());
+            submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_set_speed"+currentSpeed.getText());
         }
         catch(NumberFormatException ex){
             final JPanel panel = new JPanel();
@@ -680,9 +747,9 @@ public class TuingUI extends javax.swing.JFrame {
 
     private void Start_CheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Start_CheckBoxActionPerformed
         // TODO add your handling code here:
-        if(Start_CheckBox.isSelected())submit("vs_start");
+        if(Start_CheckBox.isSelected())submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_start");
         else{
-            submit("vs_stop");
+            submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_stop");
             charter.setPvSpeed(0);
         }
     }//GEN-LAST:event_Start_CheckBoxActionPerformed
@@ -714,7 +781,7 @@ public class TuingUI extends javax.swing.JFrame {
         ((DefaultCaret)ta_reviced.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }//GEN-LAST:event_ta_revicedMouseExited
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void saveData_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveData_ButtonActionPerformed
         // TODO add your handling code here:
         try{
             File file = new File("data1.txt");
@@ -730,7 +797,22 @@ public class TuingUI extends javax.swing.JFrame {
         catch (Exception ex){
             ex.printStackTrace();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_saveData_ButtonActionPerformed
+
+    private void tx_adressKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tx_adressKeyTyped
+        // TODO add your handling code here:
+                int in = evt.getKeyChar();
+        //System.out.println(in);
+        int[] checks = new int[] {8,49,50,51,52,53,54,55,56,57};
+        if(!contains(checks, in) || tx_adress.getText().length()>=2){
+            evt.consume();
+        }
+    }//GEN-LAST:event_tx_adressKeyTyped
+
+    private void tune_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tune_buttonActionPerformed
+        // TODO add your handling code here:
+        submit((cb_comm.getSelectedItem().toString()=="I2C" ? getAdress() : "")+"vs_tune");
+    }//GEN-LAST:event_tune_buttonActionPerformed
 
     
     /**
@@ -784,6 +866,8 @@ public class TuingUI extends javax.swing.JFrame {
     private javax.swing.JLabel Command_Titel_Label;
     private javax.swing.JLabel Comms_Label;
     private javax.swing.JLabel Comms_Titel_Label;
+    private javax.swing.JLabel Comms_Titel_Label1;
+    private javax.swing.JLabel Comms_Titel_Label2;
     private javax.swing.JButton Connect_Button;
     private javax.swing.JButton Disconnect_Button;
     private javax.swing.JLabel Recived_Titel_Label;
@@ -794,12 +878,12 @@ public class TuingUI extends javax.swing.JFrame {
     private javax.swing.JSlider SpeedSlider;
     private javax.swing.JCheckBox Start_CheckBox;
     private javax.swing.JButton Step_Button;
+    private javax.swing.JComboBox<String> cb_comm;
     private static javax.swing.JPanel chartPnlArea;
     private javax.swing.JTextField currentD;
     private javax.swing.JTextField currentI;
     private javax.swing.JTextField currentP;
     private javax.swing.JTextField currentSpeed;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -812,8 +896,11 @@ public class TuingUI extends javax.swing.JFrame {
     private javax.swing.JSlider kiSlider;
     private javax.swing.JSlider kpSlider;
     private javax.swing.JLabel lb_console;
+    private javax.swing.JButton saveData_Button;
     private javax.swing.JTextArea ta_history;
     private javax.swing.JTextArea ta_reviced;
+    private javax.swing.JButton tune_button;
+    private javax.swing.JTextField tx_adress;
     private javax.swing.JTextField tx_command;
     // End of variables declaration//GEN-END:variables
 }
