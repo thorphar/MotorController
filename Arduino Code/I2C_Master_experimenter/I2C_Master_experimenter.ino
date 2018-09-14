@@ -7,10 +7,11 @@ boolean stringComplete = false;  // whether the string is complete
 void setup() {
   Wire.begin(); // join i2c bus (address optional for master)
   Serial.begin(9600);
-
+  digitalWrite(13,LOW);
     while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
+  digitalWrite(13,HIGH);
   
 }
 
@@ -18,17 +19,16 @@ byte x = 0;
 
 void loop() {
   if (stringComplete) {
+    Serial.println(mySt);
     char little_s_string[mySt.length()+1];
     mySt.toCharArray(little_s_string, mySt.length()+1);
-    Serial.println(little_s_string);
+    //Serial.println(little_s_string);
     Wire.beginTransmission(1);
     Wire.write(little_s_string);
     Wire.endTransmission();
     mySt = "";
     stringComplete = false;
   }
-
-  
 }
 
 
@@ -40,8 +40,6 @@ void serialEvent() {
     if (inChar != '\n') {
       mySt += inChar;
     }
-    // if the incoming character is a newline, set a flag
-    // so the main loop can do something about it:
     if (inChar == '\n') {
       stringComplete = true;
     }

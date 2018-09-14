@@ -58,11 +58,11 @@ void setup() {
   pinMode(en_check,INPUT);
 
   //--------------------------start i2c 
-  //Wire.begin(adress);             // join i2c bus with address #adress
-  //Wire.onReceive(receiveEvent);   // register event
+  Wire.begin(adress);             // join i2c bus with address #adress
+  Wire.onReceive(receiveEvent);   // register event
 
   // start serial port at 9600 bps:
-  Serial.begin(19200);
+  //Serial.begin(19200);
 
   //--------------------------timer setup
   noInterrupts();           // disable all interrupts
@@ -218,21 +218,34 @@ void Stop(){
       motor_start = false;
 }
 
+// function that executes whenever data is received from master
+// this function is registered as an event, see setup()
+void receiveEvent(int howLong) {
+  while (Wire.available()) {
+    // get the new byte:
+    char inChar = Wire.read();
+    // add it to the inputString:
+    mySt += inChar;
+  }
+  // if the incoming character is a newline, set a flag
+  // so the main loop can do something about it:
+  stringComplete = true;
+}
 
 
 //when data is recived via serial connection
-void serialEvent() {
-  while (Serial.available()) {
-    // get the new byte:
-    char inChar = (char)Serial.read();
-    // add it to the inputString:
-    if (inChar != '\n') {
-      mySt += inChar;
-    }
-    // if the incoming character is a newline, set a flag
-    // so the main loop can do something about it:
-    if (inChar == '\n') {
-      stringComplete = true;
-    }
-  }
-}
+//void serialEvent() {
+//  while (Serial.available()) {
+//    // get the new byte:
+//    char inChar = (char)Serial.read();
+//    // add it to the inputString:
+//    if (inChar != '\n') {
+//      mySt += inChar;
+//    }
+//    // if the incoming character is a newline, set a flag
+//    // so the main loop can do something about it:
+//    if (inChar == '\n') {
+//      stringComplete = true;
+//    }
+//  }
+//}

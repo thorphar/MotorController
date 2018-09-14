@@ -43,6 +43,7 @@ public class ChartObject extends Thread{
         speed.add(0.0);
         
         startTime = System.currentTimeMillis();
+        //System.out.println(startTime);
         double[][] initdata = dataListToArray(dataX,dataY);
         
         graph = QuickChart.getChart("Data", "Time (seconds)", "Speed (RPM)", "PV Speed", initdata[0], initdata[1]);
@@ -96,7 +97,7 @@ public class ChartObject extends Thread{
     public void addDataPoint(double y, double pvspeed){
         dataY.add(y);
         speed.add(pvspeed);
-        dataX.add((double)((System.currentTimeMillis() - startTime) / 1000));
+        dataX.add(((double)(System.currentTimeMillis() - startTime) / 1000));
         
         int length = dataY.size();
 
@@ -130,6 +131,16 @@ public class ChartObject extends Thread{
     }
     public void setConnected(boolean connected){
         this.connected = connected;
+    }
+    
+    public double[][] getData(){
+        int dataSize = dataX.size();
+        double[][] data = new double[dataSize][2];
+        for(int i = 0; i<dataSize; i++){
+            data[i][0] = dataX.get(i);
+            data[i][1] = dataY.get(i);
+        }
+        return data;
     }
     
 }

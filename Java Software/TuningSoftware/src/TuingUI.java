@@ -5,6 +5,7 @@
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileWriter;
 import javax.swing.JPanel;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
@@ -13,8 +14,12 @@ import org.knowm.xchart.XYChart;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultCaret;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 /**
  *
  * @author Harry Thorpe
@@ -104,6 +109,7 @@ public class TuingUI extends javax.swing.JFrame {
         currentI = new javax.swing.JTextField();
         currentD = new javax.swing.JTextField();
         Recived_Titel_Label1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         jMenu3.setText("jMenu3");
 
@@ -312,6 +318,13 @@ public class TuingUI extends javax.swing.JFrame {
         Recived_Titel_Label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         Recived_Titel_Label1.setText("Last Command:");
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -338,12 +351,6 @@ public class TuingUI extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(Command_Titel_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Comms_Label)
-                                .addComponent(Comms_Titel_Label)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(Send_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
@@ -368,7 +375,16 @@ public class TuingUI extends javax.swing.JFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(Recived_Titel_Label1)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lb_console, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(lb_console, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(Comms_Label)
+                                        .addComponent(Comms_Titel_Label))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jButton1)
+                                        .addComponent(Send_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -422,10 +438,15 @@ public class TuingUI extends javax.swing.JFrame {
                                                     .addComponent(currentD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(jLabel3)
                                                     .addComponent(kdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGap(4, 4, 4)
-                                        .addComponent(Comms_Titel_Label)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(Comms_Label)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(4, 4, 4)
+                                                .addComponent(Comms_Titel_Label)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(Comms_Label))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jButton1)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                             .addComponent(tx_command, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -693,6 +714,24 @@ public class TuingUI extends javax.swing.JFrame {
         ((DefaultCaret)ta_reviced.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }//GEN-LAST:event_ta_revicedMouseExited
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try{
+            File file = new File("data1.txt");
+            FileWriter fileWriter = new FileWriter(file);
+            double[][] data = charter.getData();
+            for(int i = 0; i < data.length; i++){
+                fileWriter.write(data[i][0]+","+data[i][1]);  
+                fileWriter.write(System.lineSeparator());
+            }
+            fileWriter.flush();
+            fileWriter.close();
+        }   
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -760,6 +799,7 @@ public class TuingUI extends javax.swing.JFrame {
     private javax.swing.JTextField currentI;
     private javax.swing.JTextField currentP;
     private javax.swing.JTextField currentSpeed;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
