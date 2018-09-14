@@ -49,20 +49,9 @@ public class Serial{
             System.out.println(SerialPort.getCommPorts()[i].toString());
         }
         
-        final JPanel portSelectPanel = new JPanel();
-        javax.swing.JLabel L_titel = new javax.swing.JLabel();
-        javax.swing.JLabel L_text = new javax.swing.JLabel();
-        javax.swing.JComboBox<String> cb_ports = new javax.swing.JComboBox<>();
-        cb_ports.setModel(new javax.swing.DefaultComboBoxModel<>(ports));
-        javax.swing.JButton Button_submit = new javax.swing.JButton();
-        portSelectPanel.add(L_titel);
-        portSelectPanel.add(L_text);
-        portSelectPanel.add(cb_ports);
-        portSelectPanel.add(Button_submit);
         
-                
-        
-        comPort = SerialPort.getCommPorts()[0];
+        int x = JOptionPane.showOptionDialog(null, "Select the port", "Port Select", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, ports, ports[0]);
+        comPort = SerialPort.getCommPorts()[x];
         comPort.setBaudRate(19200);
         
         comPort.addDataListener(new SerialPortDataListener() {
