@@ -88,7 +88,6 @@ public class TuingUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu3 = new javax.swing.JMenu();
         Connect_Button = new javax.swing.JButton();
         tx_command = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -127,8 +126,6 @@ public class TuingUI extends javax.swing.JFrame {
         cb_comm = new javax.swing.JComboBox<>();
         Comms_Titel_Label2 = new javax.swing.JLabel();
         tune_button = new javax.swing.JButton();
-
-        jMenu3.setText("jMenu3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -888,7 +885,6 @@ public class TuingUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

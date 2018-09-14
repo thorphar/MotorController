@@ -43,8 +43,24 @@ public class Serial{
             return;
         }
         
-        for(int i = 0; i<SerialPort.getCommPorts().length;i++)
+        String[] ports = new String[SerialPort.getCommPorts().length];
+        for(int i = 0; i<SerialPort.getCommPorts().length;i++){
+            ports[i] = SerialPort.getCommPorts()[i].toString();
             System.out.println(SerialPort.getCommPorts()[i].toString());
+        }
+        
+        final JPanel portSelectPanel = new JPanel();
+        javax.swing.JLabel L_titel = new javax.swing.JLabel();
+        javax.swing.JLabel L_text = new javax.swing.JLabel();
+        javax.swing.JComboBox<String> cb_ports = new javax.swing.JComboBox<>();
+        cb_ports.setModel(new javax.swing.DefaultComboBoxModel<>(ports));
+        javax.swing.JButton Button_submit = new javax.swing.JButton();
+        portSelectPanel.add(L_titel);
+        portSelectPanel.add(L_text);
+        portSelectPanel.add(cb_ports);
+        portSelectPanel.add(Button_submit);
+        
+                
         
         comPort = SerialPort.getCommPorts()[0];
         comPort.setBaudRate(19200);
