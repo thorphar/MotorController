@@ -36,23 +36,35 @@ public class Serial{
         this.ta_console = ta_console;
         
         if(SerialPort.getCommPorts().length <= 0 ){
-            System.out.println("No device connected, connect one then restart the programe");
+            System.out.println("No device connected, connect one then restart the program");
             final JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "No device connected, connect one then restart the programe", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, "No device connected, connect one then restart the program", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
             return;
         }
         
         String[] ports = new String[SerialPort.getCommPorts().length];
         for(int i = 0; i<SerialPort.getCommPorts().length;i++){
-            ports[i] = SerialPort.getCommPorts()[i].toString();
-            System.out.println(SerialPort.getCommPorts()[i].toString());
+            ports[i] = SerialPort.getCommPorts()[i].toString().substring(SerialPort.getCommPorts()[i].toString().lastIndexOf("@")) + " : " + SerialPort.getCommPorts()[i].getDescriptivePortName();
+            System.out.print(SerialPort.getCommPorts()[i].toString());
+            System.out.print(" : " );
+            System.out.print(SerialPort.getCommPorts()[i].getDescriptivePortName() );
+            System.out.print(" : " );
+            System.out.println(SerialPort.getCommPorts()[i].getPortDescription() );
         }
         
+        String[] baudRates = new String[] { "300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200" };
+        javax.swing.JComboBox<String> cb_baudRate = new javax.swing.JComboBox<>();
+        cb_baudRate.setModel(new javax.swing.DefaultComboBoxModel<>(baudRates));
+        cb_baudRate.setSelectedIndex(7);
         
-        int x = JOptionPane.showOptionDialog(null, "Select the port", "Port Select", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, ports, ports[0]);
-        comPort = SerialPort.getCommPorts()[x];
-        comPort.setBaudRate(19200);
+        javax.swing.JComboBox<String> cb_Ports = new javax.swing.JComboBox<>();
+        cb_Ports.setModel(new javax.swing.DefaultComboBoxModel<>(ports));
+        
+        int x = JOptionPane.showOptionDialog(null, "Select the port", "Port Select", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{cb_Ports,cb_baudRate,"ok"}, ports[0]);
+        
+        comPort = SerialPort.getCommPorts()[cb_Ports.getSelectedIndex()];
+        comPort.setBaudRate(Integer.parseInt(baudRates[cb_baudRate.getSelectedIndex()]));
         
         comPort.addDataListener(new SerialPortDataListener() {
             @Override
@@ -110,7 +122,7 @@ public class Serial{
     
     public String getCommsPort(){
         if(comPort == null)return "No device";
-        else return comPort.toString();
+        else return comPort.toString().substring(comPort.toString().lastIndexOf("@")) + " : " + comPort.getDescriptivePortName() + " : " + comPort.getBaudRate();
     }
     
     public void openConnection(){
