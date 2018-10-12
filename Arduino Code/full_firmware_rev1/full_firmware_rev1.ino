@@ -11,8 +11,8 @@
 #define  en_check 7   //high if encoder is connected
 #define  pin_dir 4    //for H-bridge: run motor forward
 #define  pin_pwm 5    //for H-bridge: run motor backward
-#define  ls_1 8       //limit switch 1 forward
-#define  ls_2 9       //limit switch 2 reverse
+#define  ls_1 8       //limit switch 1 reverse
+#define  ls_2 9       //limit switch 2 forward
 #define  cs A0        //current sensor value
 #define  tm A1        //motor housing temprature
 #define  tg A2        //gear box housing temprature
@@ -91,6 +91,14 @@ void loop() {
   if(GetBoardTemp()>=tbCutoff){
     Stop();
   }
+  if(digitalRead(ls_1) && set_speed>0){
+    set_speed=0;
+    analogWrite(pin_pwm,0);
+  }
+  if(digitalRead(ls_2)&& set_speed<0){
+    set_speed=0;
+    analogWrite(pin_pwm,0);
+  }
 
   if (stringComplete) {
     
@@ -160,20 +168,23 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine - tick every 0.1sec
     Serial.print(", setspeed");
     Serial.print(set_speed);
     Serial.print(", pwmspeed");
-    Serial.println(pwm_pulse);
+    Serial.print(pwm_pulse);
+    Serial.print(", eSum");
+    Serial.println(e_speed_sum);
     }
 
     
-
+    double errorSumLim = 4000;
+    
   //PID program
   if (motor_start){    
     e_speed = set_speed - pv_speed;
     pwm_pulse = e_speed*kp + e_speed_sum*ki + (e_speed - e_speed_pre)*kd;
     e_speed_pre = e_speed;  //save last (previous) error
     e_speed_sum += e_speed; //sum of error
-    if (e_speed_sum >4000) e_speed_sum = 4000;
-    if (e_speed_sum <-4000) e_speed_sum = -4000;
-    if(set_speed == 0 && pv_speed == 0) pwm_pulse = 0;
+    if (e_speed_sum > errorSumLim) e_speed_sum = errorSumLim;
+    if (e_speed_sum < -1 * errorSumLim) e_speed_sum = -1 * errorSumLim;
+    if (set_speed == 0 && pv_speed == 0) pwm_pulse = 0;
   }
   else{
     e_speed = 0;

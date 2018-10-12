@@ -109,6 +109,20 @@ void loop() {
     Wire.write("Error:BoardTemp,");
     Wire.endTransmission();
   }
+    if(digitalRead(ls_1) && set_speed>0){
+    set_speed=0;
+    analogWrite(pin_pwm,0);
+    Wire.beginTransmission(masterAdress);
+    Wire.write("Error:Limit_1,");
+    Wire.endTransmission();
+  }
+  if(digitalRead(ls_2)&& set_speed<0){
+    set_speed=0;
+    analogWrite(pin_pwm,0);
+    Wire.beginTransmission(masterAdress);
+    Wire.write("Error:Limit_2,");
+    Wire.endTransmission();
+  }
 
   if (stringComplete) {
     
