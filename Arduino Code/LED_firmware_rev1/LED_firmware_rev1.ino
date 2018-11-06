@@ -4,8 +4,10 @@
 #define LED_1 7
 #define LED_2 8
 #define DEBUG 1
+#define tb A3        //board temprature
 #define ADRESS 15
 #define MasterAdress 8
+#define tbCutoff 60   //board cutoff temprature
 
 String mySt = "";
 boolean stringComplete = false;  // whether the string is complete
@@ -27,6 +29,10 @@ void setup() {
 
 
 void loop() {
+  
+  if(GetBoardTemp()>=tbCutoff){
+    Stop();
+  }
 
   if (stringComplete) {
     if (mySt.substring(0,5) == "LED_1"){
@@ -60,3 +66,20 @@ void receiveEvent(uint8_t num_bytes)
 
   digitalWrite(DEBUG,HIGH);
 }
+
+//get board temprature
+double GetBoardTemp(){
+  int tbRaw = analogRead(tb);       // read the input pin
+  double tbV = ((double)5/(double)1024)*tbRaw;  //convert to volts
+  double val =(tbV*1000-500)/10;    //convert to temprature where VO = (+10 mV/°C × T °C) + 500 mV
+  return val;
+}
+
+void Stop(){
+  pwm_1 = 0;
+  pwm_2 = 0;
+  analogWrite(LED_1,pwm_1);
+  analogWrite(LED_2,pwm_2);
+  digitalWrite(DEBUG,LOW);
+}
+
