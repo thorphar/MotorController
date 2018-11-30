@@ -53,6 +53,8 @@ void setup() {
   //---------------------------setup pins and interrupts
   pinMode(pin_a,INPUT_PULLUP);
   pinMode(pin_b,INPUT_PULLUP);
+  pinMode(ls_1,INPUT);
+  pinMode(ls_2,INPUT);
   pinMode(pin_dir,OUTPUT);
   pinMode(pin_pwm,OUTPUT);
   attachInterrupt(digitalPinToInterrupt(pin_a), detect_a_rise, RISING);
