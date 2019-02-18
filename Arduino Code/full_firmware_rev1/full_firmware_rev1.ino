@@ -85,10 +85,12 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //check if encoder is attached
-  if(!digitalRead(en_check)){// if not attached then stop
-    Stop();
-  }
+  //if(!digitalRead(en_check)){// if not attached then stop
+  //  Serial.println("ERROR: encoder not attached");
+  //  Stop();
+  //}
   if(GetBoardTemp()>=tbCutoff){
+    Serial.println("ERROR: board tempt too high");
     Stop();
   }
   if(digitalRead(ls_1) && set_speed>0){

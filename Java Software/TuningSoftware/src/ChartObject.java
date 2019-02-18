@@ -135,10 +135,11 @@ public class ChartObject extends Thread{
     
     public double[][] getData(){
         int dataSize = dataX.size();
-        double[][] data = new double[dataSize][2];
+        double[][] data = new double[dataSize][3];
         for(int i = 0; i<dataSize; i++){
             data[i][0] = dataX.get(i);
             data[i][1] = dataY.get(i);
+            data[i][2] = speed.get(i);
         }
         return data;
     }

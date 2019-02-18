@@ -785,7 +785,7 @@ public class TuingUI extends javax.swing.JFrame {
             FileWriter fileWriter = new FileWriter(file);
             double[][] data = charter.getData();
             for(int i = 0; i < data.length; i++){
-                fileWriter.write(data[i][0]+","+data[i][1]);  
+                fileWriter.write(data[i][0]+","+data[i][1]+","+data[i][2]);  
                 fileWriter.write(System.lineSeparator());
             }
             fileWriter.flush();

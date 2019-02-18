@@ -41,6 +41,9 @@ void loop() {
     else if (mySt.substring(0,5) == "LED_2"){
       pwm_2 = mySt.substring(5,mySt.length()).toInt();
     }
+    else{
+      digitalWrite(DEBUG,LOW);
+    }
     analogWrite(LED_1,pwm_1);
     analogWrite(LED_2,pwm_2);
     
@@ -52,8 +55,6 @@ void loop() {
 
 void receiveEvent(uint8_t num_bytes)
 {
-  digitalWrite(DEBUG,LOW);
-  
   while (Wire.available()) {
     // get the new byte:
     char inChar = Wire.read();
@@ -63,8 +64,6 @@ void receiveEvent(uint8_t num_bytes)
   // if the incoming character is a newline, set a flag
   // so the main loop can do something about it:
   stringComplete = true;
-
-  digitalWrite(DEBUG,HIGH);
 }
 
 //get board temprature
